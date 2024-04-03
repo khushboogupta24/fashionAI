@@ -10,4 +10,7 @@ image = Image.open(image_path)
 predictions = pipe(image)
 
 for prediction in predictions:
-    print(f"Label: {prediction['label']}, Score: {prediction['score']}, Box: {prediction['box']}")
+    print(f"Label: {prediction['label']}")
+
+#for prediction in predictions:
+    #print(f"Label: {prediction['label']}, Score: {prediction['score']}, Box: {prediction['box']}")
