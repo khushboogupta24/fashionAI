@@ -4,6 +4,12 @@ from PIL import Image
 # Initialize the object detection pipeline
 pipe = pipeline("object-detection", model="valentinafeve/yolos-fashionpedia")
 
+#input from user: santa clara university
+#goes to santa clara university userids
+#downloads the pictures of the users
+#gives those pictures as path to run the model on
+
+
 # List of image paths
 image_paths = ["group.jpeg", "dancingqueen.jpeg", "lovelylady.jpeg", "cat.jpeg", "backless.jpeg", "beach.jpeg"]
 
