@@ -1,46 +1,44 @@
 from transformers import pipeline
 from PIL import Image
+import os
 
 # Initialize the object detection pipeline
 pipe = pipeline("object-detection", model="valentinafeve/yolos-fashionpedia")
 
-#input from user: santa clara university
-#goes to santa clara university userids
-#downloads the pictures of the users
-#gives those pictures as path to run the model on
-
-
-# List of image paths
-image_paths = ["group.jpeg", "dancingqueen.jpeg", "lovelylady.jpeg", "cat.jpeg", "backless.jpeg", "beach.jpeg"]
+# Prompt the user to enter a folder name
+folder_path = input("Enter the folder name: ")
 
 # Dictionary to store label occurrences
 label_counts = {}
 
-# Process each image
-for image_path in image_paths:
-    image = Image.open(image_path)
+# Process each image in the folder
+for file_name in os.listdir(folder_path):
+    file_path = os.path.join(folder_path, file_name)
+    # Check if the file is an image
+    if os.path.isfile(file_path) and file_name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')):
+        image = Image.open(file_path)
 
-    # Get predictions for the current image
-    predictions = pipe(image)
+        # Get predictions for the current image
+        predictions = pipe(image)
 
-    print(f"Predictions for image: {image_path}")
-    for prediction in predictions:
-        print(f"Label: {prediction['label']}")
-    print()
+        print(f"Predictions for image: {file_name}")
+        # Print predictions for each image
+        for prediction in predictions:
+            print(f"Label: {prediction['label']}")
+        print()
 
-#jump the second shoe
+        # Update label counts
+        for prediction in predictions:
+            label = prediction['label']
+            if label in label_counts:
+                label_counts[label] += 1
+            else:
+                label_counts[label] = 1
 
-    # Update label counts
-    for prediction in predictions:
-        label = prediction['label']
-        if label in label_counts:
-            label_counts[label] += 1
-        else:
-            label_counts[label] = 1
+# Sort label counts by occurrences in descending order
+sorted_labels = sorted(label_counts.items(), key=lambda x: x[1], reverse=True)
 
-
-# Find the label with the maximum occurrence
-max_label = max(label_counts, key=label_counts.get)
-max_occurrence = label_counts[max_label]
-
-print(f"The most common label is '{max_label}' with {max_occurrence} occurrences.")
+# Print the top 5 labels
+print("Top 5 labels:")
+for label, count in sorted_labels[:5]:
+    print(f"Label: {label}, Occurrences: {count}")
