@@ -5,7 +5,6 @@ import cv2
 import numpy as np
 from collections import Counter
 
-# Initialize the object detection pipeline
 pipe = pipeline("object-detection", model="valentinafeve/yolos-fashionpedia")
 
 
@@ -33,18 +32,18 @@ def process_images(folder_path, exclude_colors, num_colors=5):
     label_counts = {}
     for file_name in os.listdir(folder_path):
         file_path = os.path.join(folder_path, file_name)
-        # Check if the file is an image
+
         if os.path.isfile(file_path) and file_name.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')):
             image = Image.open(file_path)
 
-            # Get predictions for the current image
+
             predictions = pipe(image)
 
             print(f"Predictions for image: {file_name}")
-            # Print predictions for each image
+
             for prediction in predictions:
                 print(f"Label: {prediction['label']}")
-                # Update label counts
+
                 label = prediction['label']
                 if label in label_counts:
                     label_counts[label] += 1
@@ -53,16 +52,16 @@ def process_images(folder_path, exclude_colors, num_colors=5):
 
             print()
 
-            # Process top colors
+
             img_cv2 = cv2.imread(file_path)
             top_colors = extract_top_colors(img_cv2, exclude_colors, num_colors=num_colors)
-            # Update all color counts
+
             all_color_counts.update(map(tuple, top_colors))
 
-    # Sort overall color counts by occurrences in descending order
+
     sorted_colors = all_color_counts.most_common(num_colors)
 
-    # Print the top 5 overall colors
+
     print("Top 5 overall colors (Hex format):")
     for color, count in sorted_colors:
         print(rgb_to_hex(np.array(color)))
