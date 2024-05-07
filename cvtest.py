@@ -27,3 +27,7 @@ if colors is not None:
     print("Dominant Colors (RGB format):")
     for color in colors:
         print(color)
+
+        #folder by college names
+        #folder - 50 pictures
+        #take pictures from that folder by college name and give 
