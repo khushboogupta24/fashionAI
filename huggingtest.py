@@ -7,7 +7,7 @@ pipe = pipeline("object-detection", model="valentinafeve/yolos-fashionpedia")
 # image_path = "dancingqueen.jpeg"
 # image = Image.open(image_path)
 #
-image_path = "watch.jpg"
+image_path = "examplepics/watch.jpg"
 image = Image.open(image_path)
 
 # image_path = "cat.jpeg"

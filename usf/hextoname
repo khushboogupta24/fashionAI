@@ -1,0 +1,17 @@
+import webcolors
+
+def hex_to_color_name(hex_color):
+    try:
+        # Convert hex color code to closest CSS3 color name
+        color_name = webcolors.hex_to_name(hex_color)
+    except ValueError:
+        # If there's no exact match, find the closest color
+        rgb_color = webcolors.hex_to_rgb(hex_color)
+        color_name = webcolors.rgb_to_name(rgb_color, spec='css3')
+
+    return color_name
+
+# Example usage
+hex_color = "#00ff00"
+color_name = hex_to_color_name(hex_color)
+print(f"Hex color {hex_color} is called {color_name}")

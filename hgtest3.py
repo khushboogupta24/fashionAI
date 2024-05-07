@@ -6,7 +6,7 @@ from diffusers import DiffusionPipeline
 
 pipeline = DiffusionPipeline.from_pretrained("Falah/fashion-model")
 
-image_path = "dancingqueen.jpeg"
+image_path = "examplepics/dancingqueen.jpeg"
 image = Image.open(image_path)
 
 predictions = pipe(image)
