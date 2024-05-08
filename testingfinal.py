@@ -1,5 +1,3 @@
-#this one works but very slow and not the best results, and hex output
-
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
@@ -19,8 +17,10 @@ def extract_top_colors(image, exclude_colors, num_colors=5, threshold=50):
 
     pixels = rgb_image.reshape((-1, 3))
 
+    # Filter out black and grey colors
     filtered_pixels = [pixel for pixel in pixels if
-                       all(np.linalg.norm(pixel - color) > threshold for color in exclude_colors)]
+                       all(np.linalg.norm(pixel - color) > threshold for color in exclude_colors)
+                       and not np.all(pixel < 50)]  # Filter out colors close to black
 
     color_counts = Counter(tuple(pixel) for pixel in filtered_pixels)
 
@@ -31,14 +31,19 @@ def extract_top_colors(image, exclude_colors, num_colors=5, threshold=50):
 
 # Function to convert RGB color to hex format
 def rgb_to_hex(rgb_color):
-    # Check if rgb_color is a sequence with length 3
-    if len(rgb_color) == 3:
-        return '#{:02x}{:02x}{:02x}'.format(int(rgb_color[0]), int(rgb_color[1]), int(rgb_color[2]))
+    # Check if rgb_color is iterable (a sequence)
+    if hasattr(rgb_color, '__iter__'):
+        # Check if rgb_color has exactly 3 components
+        if len(rgb_color) == 3:
+            return '#{:02x}{:02x}{:02x}'.format(int(rgb_color[0]), int(rgb_color[1]), int(rgb_color[2]))
+        else:
+            # Handle the case where rgb_color does not have exactly 3 components
+            print("Error: Expected rgb_color to have 3 components, but got:", rgb_color)
+            return None
     else:
-        # Handle the case where rgb_color is not a sequence with length 3
-        print("Error: Expected rgb_color to be a sequence with 3 components, but got:", rgb_color)
+        # Handle the case where rgb_color is not iterable (not a sequence)
+        print("Error: Expected rgb_color to be iterable, but got:", rgb_color)
         return None
-
 
 
 # Function to process images and return top 5 options for colors, silhouettes, and accessories
@@ -106,7 +111,6 @@ def process_images(folder_path, exclude_colors, num_colors=5):
 
 
 # Function to display images based on user selection
-# Function to display images based on user selection
 def display_images(top_colors, top_silhouettes, top_accessories, folder_path):
     selected_color = colors_combobox.get()
     selected_silhouette = silhouettes_combobox.get()
@@ -127,7 +131,8 @@ def display_images(top_colors, top_silhouettes, top_accessories, folder_path):
 
             # Check for color match
             if selected_color != "N/A":
-                colors_in_image = [rgb_to_hex(np.array(color[0])) for color in extract_top_colors(cv2.imread(file_path), [], num_colors=5)]
+                colors_in_image = [rgb_to_hex(np.array(color[0])) for color in
+                                   extract_top_colors(cv2.imread(file_path), [], num_colors=5)]
                 if selected_color not in colors_in_image:
                     match = False
 
@@ -159,13 +164,12 @@ def display_images(top_colors, top_silhouettes, top_accessories, folder_path):
         img_label.pack(pady=5)
 
 
-
 # Function to create the GUI
-def create_gui(folder_path, grass_colors):
+def create_gui(folder_path, exclude_colors):
     global colors_combobox, silhouettes_combobox, accessories_combobox
 
     # Process the images and get top 5 options
-    top_colors, top_silhouettes, top_accessories, folder_path = process_images(folder_path, grass_colors)
+    top_colors, top_silhouettes, top_accessories, folder_path = process_images(folder_path, exclude_colors)
 
     # Print top 5 overall colors
     print("\nTop 5 overall colors (Hex format):")
@@ -185,9 +189,6 @@ def create_gui(folder_path, grass_colors):
     # Create a window
     root = tk.Tk()
     root.title("Top 5 Options")
-
-    # Process the images and get top 5 options
-    top_colors, top_silhouettes, top_accessories, folder_path = process_images(folder_path, grass_colors)
 
     # Add "N/A" option to each category's list
     top_colors_with_na = ["N/A"] + top_colors
@@ -228,17 +229,15 @@ def create_gui(folder_path, grass_colors):
     root.mainloop()
 
 
-# Folder path input and grass colors definition
+# Folder path input and exclude colors definition
 folder_path = input("Enter the folder path: ")
 
-grass_colors = [
-    np.array([99, 103, 67]),
-    np.array([133, 146, 85]),
-    np.array([63, 66, 39]),
-    np.array([174, 183, 118]),
-    np.array([232, 217, 179])
+exclude_colors = [
+    np.array([0, 0, 0]),     # Black
+    np.array([128, 128, 128]),  # Grey
+    np.array([0, 128, 0])   # Green
 ]
 
 
 # Create the GUI
-create_gui(folder_path, grass_colors)
+create_gui(folder_path, exclude_colors)
