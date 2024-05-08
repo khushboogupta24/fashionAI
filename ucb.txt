@@ -1,0 +1,20 @@
+Top colors:
+#010101
+#000000
+#ffffff
+#020202
+#040404
+
+Top silhouettes:
+sleeve
+dress
+pants
+top, t-shirt, sweatshirt
+shorts
+
+Top accessories:
+shoe
+neckline
+hat
+bag, wallet
+belt
