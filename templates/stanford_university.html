@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tour Trend</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to external CSS file -->
+    <style>
+         #topColors li {
+            padding: 5px;
+            margin: 5px 0;
+            color: #fff; /* Set text color to white for better contrast */
+        }
+        #randomPictures {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        #randomPictures img {
+            width: calc(100% / 5); /* Display 5 images per row */
+            margin: 5px;
+        }
+    </style>
+<body>
+    <header>
+        <h1>TrendTour</h1>
+        <h3>Learn fashion trends based on your preferences and location</h3>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="home.html">Home</a></li>
+            <li class="dropdown">
+                <a href="#">Options</a>
+                <ul class="dropdown-content">
+                    <li><a href="#">Option 1</a></li>
+                    <li><a href="#">Option 2</a></li>
+                    <li><a href="#">Option 3</a></li>
+                </ul>
+            </li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+    <h1>Stanford University</h1>
+    <section id="results">
+        <h2>Top 5 Colors</h2>
+        <ul id="topColors">
+            <li style="background-color: #010101;">#010101</li>
+            <li style="background-color: #000000;">#000000</li>
+            <li style="background-color: #ffffff;">#ffffff</li>
+            <li style="background-color: #020202;">#020202</li>
+            <li style="background-color: #040404;">#040404</li>
+        </ul>
+        
+        <h2>Top 5 Silhouettes</h2>
+        <ul id="topSilhouettes">
+            <li>sleeve</li>
+            <li>dress</li>
+            <li>pants</li>
+            <li>top, t-shirt, sweatshirt</li>
+            <li>shorts</li>
+        </ul>
+        
+        <h2>Top 5 Accessories</h2>
+        <ul id="topAccessories">
+            <li>shoe</li>
+            <li>neckline</li>
+            <li>hat</li>
+            <li>bag, wallet</li>
+            <li>belt</li>
+        </ul>
+        
+        <h2>Random Pictures</h2>
+        <div id="randomPictures"></div>
+    </section>
+    <footer>
+        <p>&copy; 2024 Tour Trend Application. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Function to load random pictures
+        function loadRandomPictures() {
+            var randomPicturesDiv = document.getElementById("randomPictures");
+
+            // Path to the folder containing the images
+            var imagePath = "../stanford/"; // Change this path to your actual folder path
+
+// Fetch the list of files in the directory
+fetch(imagePath)
+    .then(response => response.text())
+    .then(data => {
+        // Parse the HTML response into a DOM object
+        var parser = new DOMParser();
+        var htmlDoc = parser.parseFromString(data, 'text/html');
+
+        // Extract the links (href attributes) from the parsed HTML
+        var links = htmlDoc.querySelectorAll('a');
+
+        // Filter out only image files
+        var imageFiles = [];
+        links.forEach(link => {
+            var filename = link.getAttribute('href');
+            if (isValidImage(filename)) {
+                imageFiles.push(filename);
+            }
+        });
+
+        // Number of pictures to display
+        var numberOfPictures = 30;
+
+        // Randomly select image files to display
+        for (var i = 0; i < numberOfPictures && i < imageFiles.length; i++) {
+            var randomIndex = Math.floor(Math.random() * imageFiles.length);
+            var fileName = imageFiles[randomIndex];
+
+            // Create image element
+            var img = document.createElement("img");
+            img.src = fileName; // Adjusted to remove the redundant "ucb/"
+
+            // Append image to randomPicturesDiv
+            randomPicturesDiv.appendChild(img);
+
+            // Remove the selected file from the array to prevent duplicates
+            imageFiles.splice(randomIndex, 1);
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching image files:', error);
+    });
+        }
+
+        // Function to check if a filename ends with a valid image extension
+        function isValidImage(filename) {
+            var validExtensions = [".jpg", ".jpeg", ".png", ".gif"]; // Add more extensions if needed
+            var extension = filename.substr(filename.lastIndexOf('.')).toLowerCase();
+            return validExtensions.includes(extension);
+        }
+
+        // Call the function when the page loads
+        window.onload = loadRandomPictures;
+    </script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tour Trend</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to external CSS file -->
+</head>
+<body>
+    <header>
+        <h1>TrendTour</h1>
+        <h3>Learn fashion trends based on your preferences and location</h3>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="home.html">Home</a></li>
+            <li class="dropdown">
+                <a href="#">Options</a>
+                <ul class="dropdown-content">
+                    <li><a href="#">Option 1</a></li>
+                    <li><a href="#">Option 2</a></li>
+                    <li><a href="#">Option 3</a></li>
+                </ul>
+            </li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+    <section>
+        <h2>Start here</h2>
+        <form id="collegeForm">
+            <label for="options">Select your college:</label>
+            <select id="options" name="options">
+                <option value="uc_berkeley">UC Berkeley</option>
+                <option value="santa_clara_university">Santa Clara University</option>
+                <option value="san_jose_state_university">San Jose State University</option>
+                <option value="stanford_university">Stanford University</option>
+                <option value="university_of_san_francisco">University of San Francisco</option>
+            </select>
+            <button type="submit">Submit</button>
+        </form>
+    </section>
+    <footer>
+        <p>&copy; 2024 Tour Trend Application. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.getElementById("collegeForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+
+            // Get the selected college
+            var selectedCollege = document.getElementById("options").value;
+
+            // Redirect to the corresponding page based on the selected college
+            switch (selectedCollege) {
+                case "uc_berkeley":
+                    window.location.href = "uc_berkeley.html";
+                    break;
+                case "santa_clara_university":
+                    window.location.href = "santa_clara_university.html";
+                    break;
+                case "san_jose_state_university":
+                    window.location.href = "san_jose_state_university.html";
+                    break;
+                case "stanford_university":
+                    window.location.href = "stanford_university.html";
+                    break;
+                case "university_of_san_francisco":
+                    window.location.href = "university_of_san_francisco.html";
+                    break;
+                default:
+                    // Redirect to a default page if none of the colleges match
+                    window.location.href = "default.html";
+                    break;
+            }
+        });
+    </script>
+</body>
+</html>
